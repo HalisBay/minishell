@@ -9,7 +9,7 @@ incs	=					-I $(incl) -I ./libultift -I $(tests)/incs
 
 wflags	=				# -Wall -Wextra -Werror
 sanitize =				#-fsanitize=thread #-fsanitize=address
-CFLAGS =				-D BUFFER_SIZE=65535 -std=c99 -g $(incs) $(wflags) $(sanitize)
+CFLAGS =				-D BUFFER_SIZE=65535 -std=c99 -g $(incs) $(wflags) -lreadline
 
 os =					${shell uname -s}
 
@@ -76,13 +76,13 @@ run: all
 clean:
 	rm -f $(OBJ) $(B_OBJ)
 
-fclean:					clean
+fclean:		clean
 ifeq "$(os)" "Darwin"
 # 	make -C $(libs)/minilibx_opengl_20191021 clean
 else ifeq ($(os),Linux)
 # 	make -C $(libs)/minilibx-linux clean
 endif
-	make -C ./libft clean &
+	make -C ./libultift clean &
 	rm -f $(NAME) $(BNAME) & wait
 
 re:						fclean

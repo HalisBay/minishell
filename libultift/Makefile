@@ -27,7 +27,6 @@ MAKEFLAGS +=		-j$(NPROCS)
 
 $(NAME): $(OBJECTS)
 	@echo "\033[92m compiling $@... \033[0m\n"
-	# @sleep 1
 	@echo "\033[92m $@ [OK!]\033[0m"
 	ar -rcs $(NAME) $(OBJECTS)
 

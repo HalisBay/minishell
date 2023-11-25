@@ -6,7 +6,7 @@
 /*   By: hbay <hbay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 18:14:08 by ahbasara          #+#    #+#             */
-/*   Updated: 2023/11/22 23:30:22 by hbay             ###   ########.fr       */
+/*   Updated: 2023/11/25 05:06:40 by hbay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,11 @@
 #  define YELLOW "\x1B[33m"
 #  define BLUE "\x1B[34m"
 #  define RESET "\x1B[0m"
+
+#  define POSTFIX "$ "
+#  define SHELL_NAME "minishell"
+#  define PROMT SHELL_NAME POSTFIX
+
 # endif
 
 # include <string.h>
@@ -39,8 +44,8 @@
 # include <unistd.h>
 # include <stdlib.h>
 // # include <sys/stat.h>
-// # include <readline/readline.h>
-// # include <readline/history.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 # include <fcntl.h>
 // # include <sys/wait.h>
 // # include <signal.h>
@@ -65,5 +70,15 @@ typedef void			t_if;
  *	@memberof s_order::seq
  *	@var s_order::seq 
  */
+
+typedef	struct s_main
+{
+	
+}	t_main;
+
+typedef	struct s_cmd
+{
+	
+}	t_cmd;
 
 #endif
