@@ -6,10 +6,13 @@
 /*   By: hbay <hbay@student.42istanbul.com.tr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 18:14:08 by ahbasara          #+#    #+#             */
-/*   Updated: 2023/11/25 05:06:40 by hbay             ###   ########.fr       */
+/*   Updated: 2023/11/27 14:31:00 by hbay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+/**
+ * ps | grep './program' | awk '{print $1}' | xargs -I {} kill -9 {}
+*/
 #ifndef INCLUDE_H
 # define INCLUDE_H
 # if defined(__linux__)
@@ -37,6 +40,8 @@
 #  define SHELL_NAME "minishell"
 #  define PROMT SHELL_NAME POSTFIX
 
+#  define CMD_COUNT 8
+
 # endif
 
 # include <string.h>
@@ -63,6 +68,15 @@
 ** pthread_mutex_t			tlast_mutex; // even
 */
 typedef void			t_if;
+typedef void			covid;
+
+int	sh_echo();
+int	sh_cd();
+int	sh_pwd();
+int	sh_export();
+int	sh_unset();
+int	sh_env();
+int	sh_exit();
 
 /**
  *  @struct t_order s_order
@@ -71,14 +85,23 @@ typedef void			t_if;
  *	@var s_order::seq 
  */
 
+typedef struct s_com
+{
+	char *name;
+	int (*func)();
+	int num;
+}		t_com;
+
 typedef	struct s_main
 {
-	
-}	t_main;
+	char			*line;
+	t_com			coms[8];
+}		t_main;
 
 typedef	struct s_cmd
 {
 	
-}	t_cmd;
+}		t_cmd;
+
 
 #endif

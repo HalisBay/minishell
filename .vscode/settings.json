@@ -3,6 +3,7 @@
 		"__mutex_base": "c",
 		"fcntl.h": "c",
 		"readline.h": "c",
-		"algorithm": "c"
+		"algorithm": "c",
+		"string.h": "c"
 	}
 }
