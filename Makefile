@@ -1,44 +1,76 @@
-CC =					clang
-
-libs	=					libs
-libr	=					# -L./libft -lft
-parrent_dir	=				sh
-incl	=					$(parrent_dir)/incs
-tests	=					$(parrent_dir)/testing
-incs	=					-I $(incl) -I ./libultift -I $(tests)/incs
-
-wflags	=				# -Wall -Wextra -Werror
-sanitize =				#-fsanitize=thread #-fsanitize=address
-CFLAGS =				-D BUFFER_SIZE=65535 -std=c99 -g $(incs) $(wflags) -lreadline
-
+wflags	=				-Wall -Wextra -Werror
 os =					${shell uname -s}
 
 ifeq '$(os)' 'Darwin'
-# 	mlxLinkFlags =		-framework OpenGL -framework AppKit -L$(libs)/minilibx_opengl_20191021 -lmlx
-# 	incs +=				-I $(libs)/minilibx_opengl_20191021
+	ltinfo =
+	wflags += -std=c99
 else ifeq '$(os)' 'Linux'
-# 	mlxLinkFlags =		-L minilibx-linux -L$(libs)/minilibx-linux -lmlx -lXext -lX11
-# 	incs +=				-I $(libs)/minilibx-linux
+	ltinfo =			-ltinfo
 endif
+
+CC =						gcc
+
+# rl		=					-L /goinfre/$(shell whoami)/homebrew/Cellar/readline/8.2.7/lib -lreadline
+# rlI		=					-I /goinfre/$(shell whoami)/homebrew/Cellar/readline/8.2.7/include
+rl		=					-L lib/lib/readline/lib -lreadline $(ltinfo)
+rlI		=					-I lib/lib/readline/include
+
+sanitize =					-fsanitize=address #-fsanitize=thread
+libs	=					libs
+libr	=					$(rl) -L./libultift -lft
+parrent_dir	=				sh
+incl	=					$(parrent_dir)/incs
+tests	=					$(parrent_dir)/testing
+incs	=					-I $(incl) -I ./libultift -I $(tests)/incs $(rlI)
+							
+
+test:=					0
+vars :=					-D BUFFER_SIZE=65535 \
+						-D TEST=$(test)
+CFLAGS :=				$(vars) -g $(incs) $(wflags)
 
 src_dir = $(parrent_dir)/srcs
 b_src_dir = $(parrent_dir)/srcs
 
-S_SRC =					# $(src_dir)/shared.c \
-						# $(tests)/testing.c
+S_SRC =					
 
 B_SRC =					$(b_src_dir)/checker.c \
 						$(S_SRC)
 
 SRC =					$(src_dir)/program.c \
+						$(src_dir)/builtins0.c \
+						$(src_dir)/builtins1.c \
+						$(src_dir)/check0.c \
+						$(src_dir)/check1.c \
+						$(src_dir)/environment0.c \
+						$(src_dir)/environment1.c \
+						$(src_dir)/executer0.c \
+						$(src_dir)/executer1.c \
+						$(src_dir)/executer2.c \
+						$(src_dir)/expander0.c \
+						$(src_dir)/expander1.c \
+						$(src_dir)/expander2.c \
+						$(src_dir)/initialization0.c \
+						$(src_dir)/parser0.c \
+						$(src_dir)/parser1.c \
+						$(src_dir)/utils0.c \
+						$(src_dir)/utils1.c \
+						$(src_dir)/utils2.c \
+						$(src_dir)/utils3.c \
+						$(src_dir)/preparatory0.c \
+						$(src_dir)/preparatory1.c \
+						$(src_dir)/preparatory2.c \
+						$(src_dir)/syntax0.c \
+						$(src_dir)/syntax1.c \
 						$(S_SRC)
 
 OBJ =					$(SRC:.c=.o)
 B_OBJ =					$(B_SRC:.c=.o)
-NAME =					program
-BNAME =					checker
-MAKEFLAGS +=			-j$(NPROCS)
+NAME =					minishell
+BNAME =					
+# MAKEFLAGS +=			-j$(NPROCS)
 murmurc				=	./libultift/libft.a
+lrl				=	./lib/lib/readline/lib/libreadline.a
 depend				=	r_murmurc
 # $(src_dir)%.o: $(src_dir)%.c
 # 	gcc -c $< -o $@ > /dev/null
@@ -46,6 +78,10 @@ depend				=	r_murmurc
 all:	$(depend) #bonus
 	$(MAKE) $(NAME)
 	@echo "===================================program======================================\n"
+
+# t:
+# 	$(MAKE) clean
+# 	$(MAKE) all
 
 b: bonus
 
@@ -56,19 +92,16 @@ mandatory: all
 bonus:		$(depend) $(B_OBJ)
 	$(CC) $(CFLAGS) $(B_OBJ) -o $(BNAME) $(libr)
 
-$(NAME):	$(murmurc) $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(libr)
+a: $(OBJ)
+
+$(NAME):	$(murmurc) $(lrl) $(OBJ)
+	$(CC) $(CFLAGS) $(sanitize) $(OBJ) $(libr) -o $(NAME)
 
 r_murmurc:
-	make -C ./libultift -j$(NPROCS)
+	make -C ./libultift all -j$(NPROCS)
 
-
-# mlx:
-# ifeq "$(os)" "Darwin"
-# 	make -C $(libs)/minilibx_opengl_20191021 -j$(NPROCS) &> /dev/null
-# else ifeq ($(os),Linux)
-# 	make -C $(libs)/minilibx-linux -j$(NPROCS) &> /dev/null
-# endif
+$(lrl):
+	$(MAKE) -C lib -j$(NPROCS) DIR=$(PWD)/lib
 
 run: all
 	./$(NAME)
@@ -82,11 +115,10 @@ ifeq "$(os)" "Darwin"
 else ifeq ($(os),Linux)
 # 	make -C $(libs)/minilibx-linux clean
 endif
-	make -C ./libultift clean &
-	rm -f $(NAME) $(BNAME) & wait
+	make -C ./libultift fclean & make -C ./lib fclean & rm -f $(NAME) $(BNAME) & wait
 
 re:						fclean
 	$(MAKE) all
 	# $(MAKE) bonus
 
-.PHONY:					re fclean clean all murmurc
+.PHONY:					re fclean clean all
